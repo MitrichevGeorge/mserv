@@ -52,6 +52,7 @@ case ":$PATH:" in
 esac
 
 echo "$HOME/.mserv/run.sh &" >> ~/.bash_profile
+echo "$HOME/.mserv/run.sh &" >> ~/.bashrc
 
 mkdir -p ~/.config/systemd/user
 
