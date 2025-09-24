@@ -69,14 +69,12 @@ class Client:
             self._stop_event.wait(10)
 
     def run(self):
-        """Запустить регистрацию и фоновый поток пинга"""
         self.register()
         self._thread = threading.Thread(target=self._ping_loop, daemon=True)
         self._thread.start()
         print("Client started in background.")
 
     def stop(self):
-        """Остановить фоновый поток"""
         self._stop_event.set()
         if self._thread:
             self._thread.join()
