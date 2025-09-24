@@ -5,6 +5,10 @@ import logging
 import signal
 import sys
 
+
+SERVER_URL = "https://geomit22.pythonanywhere.com"
+
+
 # Настройки
 HOST = '0.0.0.0'  # Слушать все интерфейсы
 PORT = 12345
@@ -29,6 +33,10 @@ def signal_handler(sig, frame):
 
 def main():
     global server_socket
+
+    client = Client(SERVER_URL)
+    client.run()
+    
     # Регистрируем обработчик сигналов
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
