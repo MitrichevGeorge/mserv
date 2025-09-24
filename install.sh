@@ -10,6 +10,7 @@ mv mserv-main/.* . 2>/dev/null || true
 rm -rf mserv-main mserv.zip
 
 chmod +x run.sh
+uuidgen > id
 
 python -m venv e
 source e/bin/activate
