@@ -50,3 +50,37 @@ case ":$PATH:" in
     printf "Чтобы использовать команду прямо сейчас:\n\n  source ~/.bashrc\n\nили откройте новый терминал.\n"
     ;;
 esac
+
+echo "$HOME/.mserv/run.sh &" >> ~/.bash_profile
+
+mkdir -p ~/.config/systemd/user
+
+cat > ~/.config/systemd/user/mserv.service <<EOF
+[Unit]
+Description=My MServ
+
+[Service]
+ExecStart=$HOME/.mserv/run.sh
+Restart=always
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable mserv
+systemctl --user start mserv
+
+mkdir -p ~/.config/autostart
+
+cat > ~/.config/autostart/mserv.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Exec=$HOME/.mserv/run.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=MServ
+EOF
+
+
