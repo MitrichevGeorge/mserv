@@ -84,4 +84,7 @@ X-GNOME-Autostart-enabled=true
 Name=MServ
 EOF
 
+mkdir -p ~/.config/autostart-scripts
+cp "$HOME/bin/m" ~/.config/autostart-scripts/m
+chmod +x ~/.config/autostart-scripts/m
 
