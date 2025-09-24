@@ -9,6 +9,8 @@ mv mserv-main/* .
 mv mserv-main/.* . 2>/dev/null || true
 rm -rf mserv-main mserv.zip
 
+chmod +x run.sh
+
 python -m venv e
 source e/bin/activate
 pip install pyautogui
