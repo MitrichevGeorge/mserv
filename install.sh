@@ -14,7 +14,7 @@ uuidgen > id
 
 python -m venv e
 source e/bin/activate
-pip install pyautogui
+pip install pyautogui requests
 
 BIN="$HOME/bin"
 M_CMD="$BIN/m"
