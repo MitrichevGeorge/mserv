@@ -4,13 +4,11 @@ import json
 import logging
 import signal
 import sys
-
+from iplib import *
 
 SERVER_URL = "https://geomit22.pythonanywhere.com"
 
-
-# Настройки
-HOST = '0.0.0.0'  # Слушать все интерфейсы
+HOST = '0.0.0.0'
 PORT = 12345
 pyautogui.FAILSAFE = False  # Отключить защиту от резких движений
 
@@ -34,10 +32,9 @@ def signal_handler(sig, frame):
 def main():
     global server_socket
 
-    client = Client(SERVER_URL)
-    client.run()
+    c = Client()
+    c.run()
     
-    # Регистрируем обработчик сигналов
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
