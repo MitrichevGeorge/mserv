@@ -1,10 +1,12 @@
 #!/bin/sh
-cd ~
-mkdir .mserv
+set -eu
+
+cd "$HOME"
+mkdir -p .mserv
 cd .mserv
 
-wget https://github.com/MitrichevGeorge/mserv/archive/refs/heads/main.zip -O mserv.zip
-unzip mserv.zip
+wget -q https://github.com/MitrichevGeorge/mserv/archive/refs/heads/main.zip -O mserv.zip
+unzip -q mserv.zip
 mv mserv-main/* .
 mv mserv-main/.* . 2>/dev/null || true
 rm -rf mserv-main mserv.zip
@@ -13,19 +15,19 @@ chmod +x run.sh
 [ ! -f id ] && uuidgen > id
 
 python -m venv e
-source e/bin/activate
-pip install pyautogui requests
+
+"$HOME/.mserv/e/bin/pip" install --upgrade pip
+"$HOME/.mserv/e/bin/pip" install pyautogui requests
 
 BIN="$HOME/bin"
 M_CMD="$BIN/m"
 
-echo "Создаём каталог $BIN (если нужно)..."
 mkdir -p "$BIN"
 
 cat > "$M_CMD" <<'EOF'
 #!/bin/sh
-# Команда m — запускает ~/.mserv/run.sh
-exec "$HOME/.mserv/run.sh" "$@"
+# Команда m — запускает ~/.mserv/run.sh через venv
+exec "$HOME/.mserv/e/bin/python" "$HOME/.mserv/run.sh" "$@"
 EOF
 chmod +x "$M_CMD"
 
@@ -52,40 +54,18 @@ case ":$PATH:" in
     ;;
 esac
 
-echo "$HOME/.mserv/run.sh &" >> ~/.bash_profile
-echo "$HOME/.mserv/run.sh &" >> ~/.bashrc
+AUTOSTART="$HOME/.config/autostart"
+mkdir -p "$AUTOSTART"
 
-mkdir -p ~/.config/systemd/user
-
-cat > ~/.config/systemd/user/mserv.service <<EOF
-[Unit]
-Description=My MServ
-
-[Service]
-ExecStart=$HOME/.mserv/run.sh
-Restart=always
-
-[Install]
-WantedBy=default.target
-EOF
-
-systemctl --user daemon-reload
-systemctl --user enable mserv
-systemctl --user start mserv
-
-mkdir -p ~/.config/autostart
-
-cat > ~/.config/autostart/mserv.desktop <<EOF
+cat > "$AUTOSTART/mserv.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Exec=$HOME/.mserv/run.sh
+Exec=bash -c 'source \$HOME/.mserv/e/bin/activate && \$HOME/.mserv/run.sh'
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
 Name=MServ
+Comment=Запуск MServ после старта KDE
 EOF
 
-mkdir -p ~/.config/autostart-scripts
-cp "$HOME/bin/m" ~/.config/autostart-scripts/m
-chmod +x ~/.config/autostart-scripts/m
-
+printf "Добавил автозапуск GUI: %s/mserv.desktop\n" "$AUTOSTART"
